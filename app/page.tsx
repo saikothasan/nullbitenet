@@ -8,8 +8,23 @@ import SEO from "@/components/seo"
 import { ArrowRight, Check, Star } from "lucide-react"
 
 export default async function Home() {
-  const allTemplates = await getAllTemplates()
+  let allTemplates = []
+  let recentBlogPosts = []
+
+  try {
+    allTemplates = await getAllTemplates()
+  } catch (error) {
+    console.error("Failed to fetch templates:", error)
+  }
+
+  try {
+    recentBlogPosts = await getAllBlogPosts()
+  } catch (error) {
+    console.error("Failed to fetch blog posts:", error)
+  }
+
   const featuredTemplates = allTemplates.slice(0, 6)
+  const featuredBlogPosts = recentBlogPosts.slice(0, 3)
 
   const categories = [
     { name: "Blog", slug: "blog", icon: "📝" },
@@ -17,9 +32,6 @@ export default async function Home() {
     { name: "Portfolio", slug: "portfolio", icon: "🎨" },
     { name: "Magazine", slug: "magazine", icon: "📰" },
   ]
-
-  const recentBlogPosts = await getAllBlogPosts()
-  const featuredBlogPosts = recentBlogPosts.slice(0, 3)
 
   return (
     <>
@@ -46,7 +58,11 @@ export default async function Home() {
 
         <section className="mb-16">
           <h2 className="text-3xl font-semibold mb-8 text-center">Featured Templates</h2>
-          <TemplateGrid templates={featuredTemplates} />
+          {featuredTemplates.length > 0 ? (
+            <TemplateGrid templates={featuredTemplates} />
+          ) : (
+            <p className="text-center text-gray-600">No templates available at the moment. Check back soon!</p>
+          )}
           <div className="text-center mt-8">
             <Button asChild variant="outline">
               <Link href="/templates">
@@ -64,15 +80,21 @@ export default async function Home() {
         <section className="mb-16">
           <h2 className="text-3xl font-semibold mb-8 text-center">Latest from Our Blog</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {featuredBlogPosts.map((post) => (
-              <div key={post.slug} className="border rounded-lg p-6 shadow-sm">
-                <h3 className="text-xl font-semibold mb-3">{post.title}</h3>
-                <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                <Button asChild variant="outline">
-                  <Link href={`/blog/${post.slug}`}>Read More</Link>
-                </Button>
-              </div>
-            ))}
+            {featuredBlogPosts.length > 0 ? (
+              featuredBlogPosts.map((post) => (
+                <div key={post.slug} className="border rounded-lg p-6 shadow-sm">
+                  <h3 className="text-xl font-semibold mb-3">{post.title}</h3>
+                  <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                  <Button asChild variant="outline">
+                    <Link href={`/blog/${post.slug}`}>Read More</Link>
+                  </Button>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-600 col-span-3">
+                No blog posts available at the moment. Check back soon!
+              </p>
+            )}
           </div>
           <div className="text-center mt-8">
             <Button asChild variant="outline">
