@@ -1,14 +1,9 @@
+import { Suspense } from "react"
 import { notFound } from "next/navigation"
-import { MDXRemote } from "next-mdx-remote/rsc"
-import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/blog"
+import BlogPost from "./blog-post"
+import { Skeleton } from "@/components/ui/skeleton"
 import SEO from "@/components/seo"
-
-export async function generateStaticParams() {
-  const posts = await getAllBlogPosts()
-  return posts.map((post) => ({
-    slug: post.slug,
-  }))
-}
+import { getBlogPostBySlug } from "@/lib/blog"
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = await getBlogPostBySlug(params.slug)
@@ -21,13 +16,25 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     <>
       <SEO title={post.title} description={post.excerpt} />
       <div className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-        <p className="text-muted-foreground mb-8">Published on {new Date(post.date).toLocaleDateString()}</p>
-        <div className="prose prose-lg max-w-none">
-          <MDXRemote source={post.content} />
-        </div>
+        <Suspense fallback={<BlogPostSkeleton />}>
+          <BlogPost post={post} />
+        </Suspense>
       </div>
     </>
+  )
+}
+
+function BlogPostSkeleton() {
+  return (
+    <div className="space-y-8">
+      <Skeleton className="h-12 w-3/4" />
+      <Skeleton className="h-6 w-48" />
+      <div className="space-y-4">
+        <Skeleton className="h-6 w-full" />
+        <Skeleton className="h-6 w-full" />
+        <Skeleton className="h-6 w-3/4" />
+      </div>
+    </div>
   )
 }
 
