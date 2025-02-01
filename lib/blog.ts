@@ -16,7 +16,7 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   const response = await fetch(`/api/blog/${slug}`)
-  if (!response.status === 404) {
+  if (response.status === 404) {
     return null
   }
   if (!response.ok) {
