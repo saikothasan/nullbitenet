@@ -110,7 +110,7 @@ export default async function TemplatePage({ params }: { params: { slug: string 
                   <ol>
                     <li>Purchase and download the template files</li>
                     <li>Log in to your Blogger dashboard</li>
-                    <li>Navigate to Theme > Edit HTML</li>
+                    <li>Navigate to Theme &gt; Edit HTML</li>
                     <li>Backup your current theme</li>
                     <li>Upload the new template files</li>
                     <li>Save and publish your new theme</li>
