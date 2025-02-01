@@ -1,9 +1,3 @@
-import fs from "fs"
-import path from "path"
-import matter from "gray-matter"
-
-const postsDirectory = path.join(process.cwd(), "content/blog")
-
 export interface BlogPost {
   slug: string
   title: string
@@ -13,41 +7,21 @@ export interface BlogPost {
 }
 
 export async function getAllBlogPosts(): Promise<BlogPost[]> {
-  const fileNames = fs.readdirSync(postsDirectory)
-  const allPostsData = fileNames.map((fileName) => {
-    const slug = fileName.replace(/\.md$/, "")
-    const fullPath = path.join(postsDirectory, fileName)
-    const fileContents = fs.readFileSync(fullPath, "utf8")
-    const { data, content } = matter(fileContents)
-
-    return {
-      slug,
-      title: data.title,
-      date: data.date,
-      excerpt: data.excerpt,
-      content,
-    } as BlogPost
-  })
-
-  return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1))
+  const response = await fetch("/api/blog")
+  if (!response.ok) {
+    throw new Error("Failed to fetch blog posts")
+  }
+  return response.json()
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  const fullPath = path.join(postsDirectory, `${slug}.md`)
-
-  if (!fs.existsSync(fullPath)) {
+  const response = await fetch(`/api/blog/${slug}`)
+  if (!response.status === 404) {
     return null
   }
-
-  const fileContents = fs.readFileSync(fullPath, "utf8")
-  const { data, content } = matter(fileContents)
-
-  return {
-    slug,
-    title: data.title,
-    date: data.date,
-    excerpt: data.excerpt,
-    content,
-  } as BlogPost
+  if (!response.ok) {
+    throw new Error("Failed to fetch blog post")
+  }
+  return response.json()
 }
 
