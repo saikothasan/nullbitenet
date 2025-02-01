@@ -2,14 +2,14 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import TemplateGrid from "@/components/template-grid"
 import CategoryGrid from "@/components/category-grid"
-import { getAllTemplates } from "@/lib/templates"
-import { getAllBlogPosts } from "@/lib/blog"
+import { getAllTemplates, type Template } from "@/lib/templates"
+import { getAllBlogPosts, type BlogPost } from "@/lib/blog"
 import SEO from "@/components/seo"
 import { ArrowRight, Check, Star } from "lucide-react"
 
 export default async function Home() {
-  let allTemplates = []
-  let recentBlogPosts = []
+  let allTemplates: Template[] = []
+  let recentBlogPosts: BlogPost[] = []
 
   try {
     allTemplates = await getAllTemplates()
