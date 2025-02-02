@@ -2,6 +2,8 @@
 
 A modern, feature-rich marketplace for high-quality Blogger templates built with Next.js 13, TypeScript, and Tailwind CSS.
 
+#### Join our telegram for more info [Join Here](https://t.me/drkingbd)
+
 ![Templateify Screenshot](https://sjc.microlink.io/6_746a7oS-Enth-AaDTpfDq96nVl9ZyhDc5B32iCrnRLFAq9vwMd7AG8uhbTjULQ4_mPaDCqn9vq0jBhBIYgyQ.jpeg)
 
 ## Features
