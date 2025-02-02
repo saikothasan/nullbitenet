@@ -3,14 +3,14 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 
-const postsDirectory = path.join(process.cwd(), "content/blog")
+const templatesDirectory = path.join(process.cwd(), "content/templates")
 
 export async function GET(request: Request, { params }: { params: { slug: string } }) {
   const { slug } = params
-  const fullPath = path.join(postsDirectory, `${slug}.md`)
+  const fullPath = path.join(templatesDirectory, `${slug}.md`)
 
   if (!fs.existsSync(fullPath)) {
-    return new NextResponse("Blog post not found", { status: 404 })
+    return new NextResponse("Template not found", { status: 404 })
   }
 
   const fileContents = fs.readFileSync(fullPath, "utf8")

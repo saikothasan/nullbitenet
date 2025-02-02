@@ -2,26 +2,14 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import TemplateGrid from "@/components/template-grid"
 import CategoryGrid from "@/components/category-grid"
-import { getAllTemplates, type Template } from "@/lib/templates"
-import { getAllBlogPosts, type BlogPost } from "@/lib/blog"
+import { getAllTemplates } from "@/lib/templates"
+import { getAllBlogPosts } from "@/lib/blog"
 import SEO from "@/components/seo"
 import { ArrowRight, Check, Star } from "lucide-react"
 
 export default async function Home() {
-  let allTemplates: Template[] = []
-  let recentBlogPosts: BlogPost[] = []
-
-  try {
-    allTemplates = await getAllTemplates()
-  } catch (error) {
-    console.error("Failed to fetch templates:", error)
-  }
-
-  try {
-    recentBlogPosts = await getAllBlogPosts()
-  } catch (error) {
-    console.error("Failed to fetch blog posts:", error)
-  }
+  const allTemplates = await getAllTemplates()
+  const recentBlogPosts = await getAllBlogPosts()
 
   const featuredTemplates = allTemplates.slice(0, 6)
   const featuredBlogPosts = recentBlogPosts.slice(0, 3)
@@ -58,11 +46,7 @@ export default async function Home() {
 
         <section className="mb-16">
           <h2 className="text-3xl font-semibold mb-8 text-center">Featured Templates</h2>
-          {featuredTemplates.length > 0 ? (
-            <TemplateGrid templates={featuredTemplates} />
-          ) : (
-            <p className="text-center text-gray-600">No templates available at the moment. Check back soon!</p>
-          )}
+          <TemplateGrid templates={featuredTemplates} />
           <div className="text-center mt-8">
             <Button asChild variant="outline">
               <Link href="/templates">
@@ -80,21 +64,15 @@ export default async function Home() {
         <section className="mb-16">
           <h2 className="text-3xl font-semibold mb-8 text-center">Latest from Our Blog</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {featuredBlogPosts.length > 0 ? (
-              featuredBlogPosts.map((post) => (
-                <div key={post.slug} className="border rounded-lg p-6 shadow-sm">
-                  <h3 className="text-xl font-semibold mb-3">{post.title}</h3>
-                  <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                  <Button asChild variant="outline">
-                    <Link href={`/blog/${post.slug}`}>Read More</Link>
-                  </Button>
-                </div>
-              ))
-            ) : (
-              <p className="text-center text-gray-600 col-span-3">
-                No blog posts available at the moment. Check back soon!
-              </p>
-            )}
+            {featuredBlogPosts.map((post) => (
+              <div key={post.slug} className="border rounded-lg p-6 shadow-sm">
+                <h3 className="text-xl font-semibold mb-3">{post.title}</h3>
+                <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                <Button asChild variant="outline">
+                  <Link href={`/blog/${post.slug}`}>Read More</Link>
+                </Button>
+              </div>
+            ))}
           </div>
           <div className="text-center mt-8">
             <Button asChild variant="outline">

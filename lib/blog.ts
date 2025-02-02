@@ -3,13 +3,20 @@ export interface BlogPost {
   title: string
   date: string
   excerpt: string
+  author: string
+  authorImage: string
+  coverImage: string
+  category: string
   content: string
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-
-export async function getAllBlogPosts(): Promise<BlogPost[]> {
-  const response = await fetch(`${BASE_URL}/api/blog`)
+export async function getAllBlogPosts(category?: string): Promise<BlogPost[]> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+  const url = new URL("/api/blog", baseUrl)
+  if (category) {
+    url.searchParams.append("category", category)
+  }
+  const response = await fetch(url.toString())
   if (!response.ok) {
     throw new Error("Failed to fetch blog posts")
   }
@@ -17,7 +24,9 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  const response = await fetch(`${BASE_URL}/api/blog/${slug}`)
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+  const url = new URL(`/api/blog/${slug}`, baseUrl)
+  const response = await fetch(url.toString())
   if (response.status === 404) {
     return null
   }
