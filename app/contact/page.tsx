@@ -19,7 +19,7 @@ export default function ContactPage() {
     setIsSubmitting(true)
 
     try {
-      await emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", { name, email, message }, "YOUR_USER_ID")
+      await emailjs.send("service_xag5ohe", "saikothsan", { name, email, message }, "nhclsi_h_X-rEJGTq")
 
       toast({
         title: "Message sent!",
